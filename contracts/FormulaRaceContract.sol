@@ -7,6 +7,7 @@ contract FormulaRaceContract is Ownable {
 
     uint16 public _ethanolMaxAmount = 1000;
     uint16 public _mechanicMaxAmount = 10;
+    uint16 public _mechanicPriceInEthanol = 50;
     mapping (address => uint256) _ethanolPerAddress;
     mapping (address => uint8) _mechanicsPerAddress;
 
@@ -24,6 +25,10 @@ contract FormulaRaceContract is Ownable {
         return tokens;
     }
 
+    function getMechanicPriceInEthanol() public view returns (uint16) {
+        return _mechanicPriceInEthanol;
+    }
+
     function buyEthanol(uint16 _amount) public {
         //TODO: How to charge using PODIUM?
         require(_ethanolPerAddress[msg.sender] + _amount <= _ethanolMaxAmount, 'Cant own more than 1000 ethanol');
@@ -34,10 +39,12 @@ contract FormulaRaceContract is Ownable {
         return _ethanolPerAddress[account];
     }
 
-    function buyMechanic() public {
+    function hireMechanic() public {
         //TODO: How to charge using PODIUM?
         //Each meachanic will cost 10% more than the last one
         require(_mechanicsPerAddress[msg.sender] < _mechanicMaxAmount, 'Cant own more than 10 mechanics.');
+        require(_ethanolPerAddress[msg.sender] >= _mechanicPriceInEthanol, 'Not enough ethanol to hire a mechanic');
+        _ethanolPerAddress[msg.sender] = _ethanolPerAddress[msg.sender] - _mechanicPriceInEthanol;
         _mechanicsPerAddress[msg.sender]++;
     }   
 
