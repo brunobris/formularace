@@ -39,12 +39,24 @@ contract FormulaRaceContract is Ownable {
         return _ethanolPerAddress[account];
     }
 
+    function getMechanicHiringCost() public view returns (uint16){
+        uint16 mechanicsOwned = _mechanicsPerAddress[msg.sender];
+        //First mechanic will be free
+        return mechanicsOwned * _mechanicPriceInEthanol;
+    }
+
     function hireMechanic() public {
         //TODO: How to charge using PODIUM?
         //Each meachanic will cost 10% more than the last one
-        require(_mechanicsPerAddress[msg.sender] < _mechanicMaxAmount, 'Cant own more than 10 mechanics.');
+        
+        //memory?
+        uint mechanicsOwned = _mechanicsPerAddress[msg.sender];
+        //First mechanic will be free
+        uint ethanolToBeCharged = getMechanicHiringCost();
+
+        require(mechanicsOwned <= _mechanicMaxAmount, 'Cant hire more than 10 mechanics.');
         require(_ethanolPerAddress[msg.sender] >= _mechanicPriceInEthanol, 'Not enough ethanol to hire a mechanic');
-        _ethanolPerAddress[msg.sender] = _ethanolPerAddress[msg.sender] - _mechanicPriceInEthanol;
+        _ethanolPerAddress[msg.sender] = _ethanolPerAddress[msg.sender] - ethanolToBeCharged;
         _mechanicsPerAddress[msg.sender]++;
     }   
 

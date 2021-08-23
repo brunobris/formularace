@@ -17,12 +17,13 @@ contract('FormulaRaceContract', async accounts => {
         const mechanicPrice = await frcgame.getMechanicPriceInEthanol();
         const ethanolBalanceBefore  = await frcgame.getEthanolByAccount(accounts[0]);
 
-        await frcgame.hireMechanic();
+        await frcgame.hireMechanic(); //first will cost 0
+        await frcgame.hireMechanic(); //second will cost 50
 
         const mechanicsBought = await frcgame.getMechanicsByAccount(accounts[0]);
         const ethanolBalance = await frcgame.getEthanolByAccount(accounts[0]);
 
-        assert.equal(1, mechanicsBought);
+        assert.equal(2, mechanicsBought);
         assert.equal(ethanolBalanceBefore - mechanicPrice, ethanolBalance);
     });
     
