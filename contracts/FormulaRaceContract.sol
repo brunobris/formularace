@@ -1,6 +1,7 @@
-pragma solidity >= 0.8.0;
+pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./Podium.sol";
 import "./FormulaRaceCar.sol";
 
 contract FormulaRaceContract is Ownable {
@@ -12,9 +13,11 @@ contract FormulaRaceContract is Ownable {
     mapping (address => uint8) _mechanicsPerAddress;
 
     FormulaRaceCar public formulaRaceCar;
+    Podium public podiumToken;
 
-    constructor(FormulaRaceCar _formulaRaceCar) {
+    constructor(Podium _podiumToken, FormulaRaceCar _formulaRaceCar) {
         formulaRaceCar = _formulaRaceCar;
+        podiumToken = _podiumToken;
     }
 
     function getOwnedCars() public view returns(uint256[] memory) {
@@ -35,7 +38,7 @@ contract FormulaRaceContract is Ownable {
         _ethanolPerAddress[msg.sender] += _amount;
     }
 
-    function getEthanolByAccount(address account) public view returns (uint256){
+    function getEthanolBalance(address account) public view returns (uint256){
         return _ethanolPerAddress[account];
     }
 
@@ -47,7 +50,6 @@ contract FormulaRaceContract is Ownable {
 
     function hireMechanic() public {
         //TODO: How to charge using PODIUM?
-        //Each meachanic will cost 10% more than the last one
         
         //memory?
         uint mechanicsOwned = _mechanicsPerAddress[msg.sender];
